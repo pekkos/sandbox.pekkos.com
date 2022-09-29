@@ -1,0 +1,19 @@
+{
+	"name": "sandbox.pekkos.com",
+	"version": "0.1.0",
+	"description": "Build scripts for website and styleguide",
+	"repository": "https://github.com/pekkos/sandbox.pekkos.com",
+	"license": "UNLICENSED",
+	"scripts": {
+		"preinstall": "npx npm-force-resolutions"
+	},
+	"resolutions": {
+		"glob-parent": "^6.0.1"
+	},
+	"devDependencies": {
+		"gulp": "^4.0.2",
+		"gulp-clean": "^0.4.0",
+		"gulp-copy": "^4.0.1"
+	},
+	"dependencies": {}
+}
