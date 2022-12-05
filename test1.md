@@ -10,5 +10,3 @@ A while back, I worked on the Test 1 branch. Just revisiting now to see where I 
 Well, while working with Test2 I thought I'd update this file a bit too.
 
 Ok, so now that work with Test3, there are some edits to be done. Wish me luck!
-
-Just checking in to say I worked a but more on this. It seemed unfinished.
