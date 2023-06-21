@@ -5,7 +5,9 @@
 	"repository": "https://github.com/pekkos/sandbox.pekkos.com",
 	"license": "UNLICENSED",
 	"scripts": {
-		"preinstall": "npx force-resolutions"
+		"preinstall": "npx force-resolutions",
+		"11ty": "npx @11ty/eleventy",
+		"all": "gulp && npx @11ty/eleventy"
 	},
 	"resolutions": {
 		"glob-parent": "^6.0.2"
@@ -16,7 +18,8 @@
 		"gulp-copy": "^4.0.1"
 	},
 	"dependencies": {
+		"@11ty/eleventy": "^2.0.1",
+		"@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
 		"@frctl/fractal": "^1.5.15"
 	}
 }
-
