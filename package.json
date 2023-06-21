@@ -6,8 +6,8 @@
 	"license": "UNLICENSED",
 	"scripts": {
 		"preinstall": "npx force-resolutions",
-		"11ty": "npx @11ty/eleventy",
-		"all": "gulp && npx @11ty/eleventy"
+		"fractal": "gulp fractal",
+		"11ty": "gulp pre_11ty && npx @11ty/eleventy && gulp post_11ty"
 	},
 	"resolutions": {
 		"glob-parent": "^6.0.2"

@@ -71,14 +71,9 @@ function clean_styleguide(cb) {
 		.pipe(clean());
 }
 
-function copy_legacy_site(cb) {
-	return src('src/_legacy/site/**/*')
-		.pipe(copy('_site', { prefix: 3 }));
-}
-
-function copy_legacy_styleguide(cb) {
-	return src('src/_legacy/styleguide/**/*')
-		.pipe(copy('_styleguide', { prefix: 3 }));
+function copy_site_assets(cb) {
+	return src('src/_static/assets/**/*')
+		.pipe(copy('_site', { prefix: 2 }));
 }
 
 function weather(cb) {
@@ -125,7 +120,7 @@ fractal.components.set('title', 'Patterns');
 fractal.docs.set('path', __dirname + '/src/fractal/docs');
 
 /* Specify a directory of static assets */
-fractal.web.set('static.path', __dirname + '/src/fractal/static');
+fractal.web.set('static.path', __dirname + '/src/_static');
 
 /* Set the static HTML build destination */
 fractal.web.set('builder.dest', __dirname + '/_styleguide');
@@ -206,10 +201,7 @@ function fractal_build() {
 
 /* Default */
 exports.default = series(
-	clean_site,
-	copy_legacy_site,
-	clean_styleguide,
-	fractal_build,
+	copy_site_assets,
 	weather
 );
 
@@ -217,3 +209,21 @@ exports.default = series(
 exports.fractal_start = fractal_start;
 exports.fractal_build = fractal_build;
 
+
+/* Fractal pipeline */
+exports.fractal = series(
+	clean_styleguide,
+	fractal_build,
+	weather
+);
+
+/* Eleventy pre pipeline */
+exports.pre_11ty = series(
+	clean_site,
+	copy_site_assets
+);
+
+/* Eleventy post pipeline */
+exports.post_11ty = series(
+	weather
+);
