@@ -32,6 +32,9 @@ https://gulpjs.com/
 */
 
 
+
+
+
 /* -----------------------------------------------------------------------------
  * Gulp requirements and plugins
  * -------------------------------------------------------------------------- */
@@ -44,6 +47,10 @@ const clean = require('gulp-clean');
 
 /* Fetch required plugins */
 const copy = require('gulp-copy');
+
+
+
+
 
 /* -----------------------------------------------------------------------------
  * Gulp tasks
@@ -83,6 +90,116 @@ function weather(cb) {
 }
 
 
+
+
+
+/* -----------------------------------------------------------------------------
+ * Fractal configuration and tasks
+ *
+ * Fractal settings documentation can be found here:
+ * https://fractal.build/guide/project-settings.html#the-fractal-js-file
+ * -------------------------------------------------------------------------- */
+
+/**
+ * Base Fractal requirements
+ */
+
+const fractal = require('@frctl/fractal').create();
+const logger = fractal.cli.console;
+
+
+
+/**
+ * Fractal configuration
+ */
+
+/* Set the title of the project */
+fractal.set('project.title', 'sandbox styleguide');
+
+/* Tell Fractal where the components will live */
+fractal.components.set('path', __dirname + '/src/fractal/patterns');
+fractal.components.set('label', 'Patterns');
+fractal.components.set('title', 'Patterns');
+
+/* Tell Fractal where the documentation pages will live */
+fractal.docs.set('path', __dirname + '/src/fractal/docs');
+
+/* Specify a directory of static assets */
+fractal.web.set('static.path', __dirname + '/src/fractal/static');
+
+/* Set the static HTML build destination */
+fractal.web.set('builder.dest', __dirname + '/_styleguide');
+
+/* Preview */
+fractal.components.set('default.preview', '@preview');
+fractal.components.set('collate.preview', '@collate');
+
+
+
+/**
+ * Customized Styleguide theme
+ */
+
+/* Require the Mandelbrot theme module */
+const mandelbrot = require('@frctl/mandelbrot');
+
+/* Create a new instance with custom config options */
+const myCustomisedTheme = mandelbrot({
+	"styles": [
+		"/styleguide.css",
+		"default"
+	]
+});
+
+/* Tell Fractal to use the configured theme by default */
+fractal.web.theme(myCustomisedTheme);
+
+
+/**
+ * Adding a SVG inline helper
+ */
+
+const hbs = require('@frctl/handlebars')({});
+const instance = fractal.components.engine(hbs);
+
+var fs = require('fs');
+instance.handlebars.registerHelper('svg', function (iconName) {
+	let path = __dirname + '/project/static/icons/' + iconName + '.svg';
+	let content = fs.readFileSync(path, 'utf8');
+	return content;
+});
+
+
+
+/**
+ * Fractal tasks
+ */
+
+/* Start a localhost:3000 web server with browser sync */
+function fractal_start() {
+	const server = fractal.web.server({
+		sync: true
+	});
+	server.on('error', err => logger.error(err.message));
+	return server.start().then(() => {
+		logger.success(`Fractal server is now running at ${server.url}`);
+	});
+}
+
+/* Build a static web site */
+function fractal_build() {
+	const builder = fractal.web.builder();
+	builder.on('progress', (completed, total) => logger.update(`Exported ${completed} of ${total} items`, 'info'));
+	builder.on('error', err => logger.error(err.message));
+	return builder.build().then(() => {
+		logger.success('Fractal build completed!');
+	});
+}
+
+
+
+
+
 /* -----------------------------------------------------------------------------
  * Public Gulp tasks
  * -------------------------------------------------------------------------- */
@@ -92,7 +209,11 @@ exports.default = series(
 	clean_site,
 	copy_legacy_site,
 	clean_styleguide,
-	copy_legacy_styleguide,
+	fractal_build,
 	weather
 );
+
+/* Fractal */
+exports.fractal_start = fractal_start;
+exports.fractal_build = fractal_build;
 
