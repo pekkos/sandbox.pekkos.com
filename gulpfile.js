@@ -78,6 +78,11 @@ function copy_site_assets(cb) {
 		.pipe(copy('_site', { prefix: 2 }));
 }
 
+function copy_processed_css(cb) {
+	return src('src/css/*')
+		.pipe(copy('src/_static/assets', { prefix: 1 }));
+}
+
 function weather(cb) {
 	exec('curl -s http://wttr.in/Gothenburg | head -7', function (err, stdout, stderr) {
 		console.log(stdout);
@@ -235,7 +240,6 @@ function fractal_build() {
 
 /* Default */
 exports.default = series(
-	copy_site_assets,
 	weather
 );
 
@@ -253,6 +257,7 @@ exports.fractal_build = fractal_build;
 exports.fractal = series(
 	clean_styleguide,
 	processSass,
+	copy_processed_css,
 	fractal_build,
 	weather
 );
