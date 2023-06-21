@@ -1,4 +1,4 @@
 node_modules
 .npmrc
-_ssite
-_sstyleguide
+_site
+_styleguide
