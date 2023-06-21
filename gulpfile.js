@@ -45,11 +45,13 @@ const gulp = require('gulp');
 const { src, dest, watch, series, parallel } = require('gulp');
 const exec = require('child_process').exec;
 const clean = require('gulp-clean');
-const sass = require('gulp-dart-sass');
-const sassGlob = require('gulp-sass-glob');
+const copy = require('gulp-copy');
+const rename = require("gulp-rename");
 
 /* Fetch required plugins */
-const copy = require('gulp-copy');
+const sass = require('gulp-dart-sass');
+const sassGlob = require('gulp-sass-glob');
+const cleanCSS = require('gulp-clean-css');
 
 
 
@@ -100,7 +102,7 @@ function weather(cb) {
  * CSS tasks
  * -------------------------------------------------------------------------- */
 
-/* Process Sass files to CSS */
+/* Pre-process Sass files to CSS */
 
 function processSass() {
 	return gulp
@@ -115,6 +117,28 @@ function processSass() {
 		.pipe(gulp.dest('src/css'))
 }
 
+/* Minify processed CSS */
+
+function minifyCSS(cb) {
+	return gulp
+		.src([
+			'src/css/*.css',
+			'!src/css/*.min.css'
+			])
+		.pipe(cleanCSS())
+		.pipe(rename({ suffix: ".min" }))
+		.pipe(gulp.dest('src/css'));
+}
+
+/*
+function minifyCSS(cb) {
+	return src('src/css/*')
+		.pipe(cleanCSS({debug: true}, (details) => {
+			console.log(`${details.name}: ${details.stats.originalSize}`);
+			console.log(`${details.name}: ${details.stats.minifiedSize}`);
+		  }))
+		  .pipe(gulp.dest('src/css'));
+}
 
 
 
@@ -249,6 +273,7 @@ exports.fractal_build = fractal_build;
 exports.fractal = series(
 	clean_styleguide,
 	processSass,
+	minifyCSS,
 	copy_processed_css,
 	fractal_build,
 	weather
