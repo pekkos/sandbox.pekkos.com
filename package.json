@@ -18,7 +18,8 @@
 		"gulp-clean-css": "^4.3.0",
 		"gulp-copy": "^4.0.1",
 		"gulp-dart-sass": "^1.1.0",
-		"gulp-sass-glob": "^1.1.0"
+		"gulp-sass-glob": "^1.1.0",
+		"gulp-size": "^4.0.1"
 	},
 	"dependencies": {
 		"@11ty/eleventy": "^2.0.1",

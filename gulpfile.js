@@ -47,6 +47,7 @@ const exec = require('child_process').exec;
 const clean = require('gulp-clean');
 const copy = require('gulp-copy');
 const rename = require("gulp-rename");
+const size = require('gulp-size');
 
 /* Fetch required plugins */
 const sass = require('gulp-dart-sass');
@@ -131,6 +132,10 @@ function processSass() {
 		})
 			.on('error', sass.logError))
 		.pipe(gulp.dest('src/css')
+			.pipe(size({
+				title: 'Processed',
+				showFiles: true
+			}))
 		.on('end', function () {
 			console.log('Sass processed to CSS.')
 		})
@@ -148,6 +153,10 @@ function minifyCSS(cb) {
 		.pipe(cleanCSS())
 		.pipe(rename({ suffix: ".min" }))
 		.pipe(gulp.dest('src/css')
+		.pipe(size({
+			title: 'Minified',
+			showFiles: true
+		}))
 		.on('end', function () {
 			console.log('CSS files minified.')
 		})
