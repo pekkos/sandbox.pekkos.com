@@ -54,6 +54,26 @@ function defaultTask(cb) {
 	cb();
 }
 
+function clean_site(cb) {
+	return src('_site/*', { read: false })
+		.pipe(clean());
+}
+
+function clean_styleguide(cb) {
+	return src('_styleguide/*', { read: false })
+		.pipe(clean());
+}
+
+function copy_legacy_site(cb) {
+	return src('src/_legacy/site/**/*')
+		.pipe(copy('_site', { prefix: 3 }));
+}
+
+function copy_legacy_styleguide(cb) {
+	return src('src/_legacy/styleguide/**/*')
+		.pipe(copy('_styleguide', { prefix: 3 }));
+}
+
 function weather(cb) {
 	exec('curl -s http://wttr.in/Gothenburg | head -7', function (err, stdout, stderr) {
 		console.log(stdout);
@@ -69,6 +89,10 @@ function weather(cb) {
 
 /* Default */
 exports.default = series(
+	clean_site,
+	copy_legacy_site,
+	clean_styleguide,
+	copy_legacy_styleguide,
 	weather
 );
 
