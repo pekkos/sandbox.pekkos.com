@@ -68,22 +68,38 @@ function defaultTask(cb) {
 
 function clean_site(cb) {
 	return src('_site/*', { read: false })
-		.pipe(clean());
+		.pipe(clean()
+		.on('end', function () {
+			console.log('Site destination folder cleaned.')
+		})
+	);
 }
 
 function clean_styleguide(cb) {
 	return src('_styleguide/*', { read: false })
-		.pipe(clean());
+		.pipe(clean()
+		.on('end', function () {
+			console.log('Styleguide destination folder cleaned.')
+		})
+	);
 }
 
 function copy_site_assets(cb) {
 	return src('src/_static/assets/**/*')
-		.pipe(copy('_site', { prefix: 2 }));
+		.pipe(copy('_site', { prefix: 2 })
+		.on('end', function () {
+			console.log('Assets folder copied from styleguide to site.')
+		})
+	);
 }
 
 function copy_processed_css(cb) {
 	return src('src/css/*')
-		.pipe(copy('src/_static/assets', { prefix: 1 }));
+		.pipe(copy('src/_static/assets', { prefix: 1 })
+		.on('end', function () {
+			console.log('CSS files copied to the styleguide assets folder.')
+		})
+	);
 }
 
 function weather(cb) {
@@ -114,7 +130,11 @@ function processSass() {
 			outputStyle: 'expanded'
 		})
 			.on('error', sass.logError))
-		.pipe(gulp.dest('src/css'))
+		.pipe(gulp.dest('src/css')
+		.on('end', function () {
+			console.log('Sass processed to CSS.')
+		})
+	);
 }
 
 /* Minify processed CSS */
@@ -127,18 +147,13 @@ function minifyCSS(cb) {
 			])
 		.pipe(cleanCSS())
 		.pipe(rename({ suffix: ".min" }))
-		.pipe(gulp.dest('src/css'));
+		.pipe(gulp.dest('src/css')
+		.on('end', function () {
+			console.log('CSS files minified.')
+		})
+	);
 }
 
-/*
-function minifyCSS(cb) {
-	return src('src/css/*')
-		.pipe(cleanCSS({debug: true}, (details) => {
-			console.log(`${details.name}: ${details.stats.originalSize}`);
-			console.log(`${details.name}: ${details.stats.minifiedSize}`);
-		  }))
-		  .pipe(gulp.dest('src/css'));
-}
 
 
 
@@ -256,6 +271,7 @@ function fractal_build() {
 
 /* Default */
 exports.default = series(
+	copy_processed_css,
 	weather
 );
 
