@@ -44,6 +44,8 @@ const gulp = require('gulp');
 const { src, dest, watch, series, parallel } = require('gulp');
 const exec = require('child_process').exec;
 const clean = require('gulp-clean');
+const sass = require('gulp-dart-sass');
+const sassGlob = require('gulp-sass-glob');
 
 /* Fetch required plugins */
 const copy = require('gulp-copy');
@@ -82,6 +84,38 @@ function weather(cb) {
 		console.log(stderr);
 		cb(err);
 	});
+}
+
+
+
+
+
+/* -----------------------------------------------------------------------------
+ * CSS tasks
+ * -------------------------------------------------------------------------- */
+
+// Stylelint of Sass files
+// BEM lint of Sass files
+// Sass to css
+// PostCSS css files
+// Minify to css.min
+// copy css files
+
+/**
+ * Process Sass files to CSS
+ */
+
+function processSass() {
+	return gulp
+		.src([
+			'src/css/sass/*.scss'
+		])
+		.pipe(sassGlob())
+		.pipe(sass({
+			outputStyle: 'expanded'
+		})
+			.on('error', sass.logError))
+		.pipe(gulp.dest('src/css'))
 }
 
 
@@ -205,6 +239,11 @@ exports.default = series(
 	weather
 );
 
+/* Sass */
+exports.sass = series(
+	processSass
+)
+
 /* Fractal */
 exports.fractal_start = fractal_start;
 exports.fractal_build = fractal_build;
@@ -213,6 +252,7 @@ exports.fractal_build = fractal_build;
 /* Fractal pipeline */
 exports.fractal = series(
 	clean_styleguide,
+	processSass,
 	fractal_build,
 	weather
 );
