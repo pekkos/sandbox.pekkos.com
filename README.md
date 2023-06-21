@@ -1,2 +1,2 @@
 # sandbox.pekkos.com
-Sandbox for setting up basic workflows and tests
+Sandbox for setting up common workflows, tests and instances of Fractal and Eleventy.
