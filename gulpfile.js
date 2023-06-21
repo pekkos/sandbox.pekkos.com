@@ -27,7 +27,8 @@ https://gulpjs.com/
 
 /* Exported / Public tasks
 
-	'$ gulp' 					[Runs through all build steps, use it locally]
+	'$ npm run fractal' 					[Runs through processing and deploys a styleguide]
+	'$ npm run 11ty'						[Fetched assets and depoys a site]
 
 */
 
@@ -99,16 +100,7 @@ function weather(cb) {
  * CSS tasks
  * -------------------------------------------------------------------------- */
 
-// Stylelint of Sass files
-// BEM lint of Sass files
-// Sass to css
-// PostCSS css files
-// Minify to css.min
-// copy css files
-
-/**
- * Process Sass files to CSS
- */
+/* Process Sass files to CSS */
 
 function processSass() {
 	return gulp
