@@ -13,13 +13,16 @@
 		"glob-parent": "^6.0.2"
 	},
 	"devDependencies": {
+		"autoprefixer": "^10.4.14",
 		"gulp": "^4.0.2",
 		"gulp-clean": "^0.4.0",
 		"gulp-clean-css": "^4.3.0",
 		"gulp-copy": "^4.0.1",
 		"gulp-dart-sass": "^1.1.0",
+		"gulp-postcss": "^9.0.1",
 		"gulp-sass-glob": "^1.1.0",
-		"gulp-size": "^4.0.1"
+		"gulp-size": "^4.0.1",
+		"postcss-discard-duplicates": "^6.0.0"
 	},
 	"dependencies": {
 		"@11ty/eleventy": "^2.0.1",

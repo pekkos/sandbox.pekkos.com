@@ -1,4 +1,20 @@
 button {
 	background: $buttoncolor;
+	border: 3px solid hotpink;
 	color: $white;
+}
+
+.bottom {
+	display: grid;
+}
+
+
+h1,
+h2 {
+	color: blue;
+}
+
+h2,
+h1 {
+	color: blue;
 }
