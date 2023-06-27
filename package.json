@@ -33,7 +33,8 @@
 		"postcss-short-color": "^4.0.0",
 		"prettier": "2.8.8",
 		"stylelint": "^15.8.0",
-		"stylelint-scss": "^5.0.1"
+		"stylelint-scss": "^5.0.1",
+		"postcss-discard-duplicates": "^6.0.0"
 	},
 	"dependencies": {
 		"@11ty/eleventy": "^2.0.1",

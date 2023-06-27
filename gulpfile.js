@@ -52,11 +52,19 @@ const size = require('gulp-size');
 /* Fetch required plugins */
 const sass = require('gulp-dart-sass');
 const sassGlob = require('gulp-sass-glob');
+const postcss = require('gulp-postcss');
 const cleanCSS = require('gulp-clean-css');
 const postcss = require('gulp-postcss');
-const autoprefixer = require('autoprefixer');
 
 const shortColor = require('postcss-short-color');
+// Autoprefixer - base on .browserslistrc
+// https://github.com/postcss/autoprefixer
+const autoprefixer = require('autoprefixer');
+
+// Discard duplicates
+// https://github.com/cssnano/cssnano/tree/master/packages/postcss-discard-duplicates
+const postcssDiscardDuplicates = require('postcss-discard-duplicates');
+
 
 
 
@@ -143,6 +151,7 @@ function processSass() {
 		});
 }
 
+
 /* Minify processed CSS */
 
 function minifyCSS(cb) {
@@ -182,7 +191,41 @@ gulp.task('csss', function(done) {
 		.on('end', done);
 });
 
+function postCSSplus(cb) {
+	const plugins = [
+		autoprefixer()
+	];
 
+	return gulp
+		.src([
+			'src/css/*.css',
+			'!src/css/*.min.css'
+			])
+		.pipe(postcss(plugins))
+		.pipe(gulp.dest('src/css'));
+}
+
+
+function postCSSminus(cb) {
+	const plugins = [
+		postcssDiscardDuplicates()
+	];
+
+	return gulp
+		.src([
+			'src/css/*.css',
+			'!src/css/*.min.css'
+		])
+		.pipe(postcss(plugins))
+		.pipe(gulp.dest('src/csss'))
+		.pipe(size({
+			title: 'Minified',
+			showFiles: true
+		}))
+		.on('end', function () {
+			console.log('CSS files minified.')
+		});
+}
 
 
 /* -----------------------------------------------------------------------------
@@ -298,7 +341,10 @@ function fractal_build() {
 
 /* Default */
 exports.default = series(
-	css
+	css,
+	processSass,
+	postCSSminus,
+	weather
 );
 
 /* Sass */

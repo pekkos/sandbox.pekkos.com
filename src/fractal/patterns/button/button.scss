@@ -1,5 +1,6 @@
 button {
 	background: $buttoncolor;
+	border: 3px solid hotpink;
 	color: $white;
 }
 
@@ -14,3 +15,14 @@ button {
 }
 
 /* or use prettier with stylelint? */
+
+
+h1,
+h2 {
+	color: blue;
+}
+
+h2,
+h1 {
+	color: blue;
+}

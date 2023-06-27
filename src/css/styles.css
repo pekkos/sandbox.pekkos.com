@@ -1,5 +1,6 @@
 button {
   background: rebeccapurple;
+  border: 3px solid hotpink;
   color: white;
 }
 
@@ -7,4 +8,14 @@ button {
   display: grid;
   transform: scale(3);
   color: white black;
+}
+
+h1,
+h2 {
+  color: blue;
+}
+
+h2,
+h1 {
+  color: blue;
 }
