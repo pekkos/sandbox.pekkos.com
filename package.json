@@ -12,14 +12,28 @@
 	"resolutions": {
 		"glob-parent": "^6.0.2"
 	},
+	"postcss": {
+		"map": false,
+		"plugins": {
+			"postcss-plugin": {}
+		}
+	},
 	"devDependencies": {
+		"autoprefixer": "^10.4.14",
 		"gulp": "^4.0.2",
 		"gulp-clean": "^0.4.0",
 		"gulp-clean-css": "^4.3.0",
 		"gulp-copy": "^4.0.1",
 		"gulp-dart-sass": "^1.1.0",
+		"gulp-postcss": "^9.0.1",
 		"gulp-sass-glob": "^1.1.0",
-		"gulp-size": "^4.0.1"
+		"gulp-size": "^4.0.1",
+		"postcss-load-config": "^4.0.1",
+		"postcss-plugin": "^1.0.0",
+		"postcss-short-color": "^4.0.0",
+		"prettier": "2.8.8",
+		"stylelint": "^15.8.0",
+		"stylelint-scss": "^5.0.1"
 	},
 	"dependencies": {
 		"@11ty/eleventy": "^2.0.1",

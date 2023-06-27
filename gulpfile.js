@@ -53,7 +53,10 @@ const size = require('gulp-size');
 const sass = require('gulp-dart-sass');
 const sassGlob = require('gulp-sass-glob');
 const cleanCSS = require('gulp-clean-css');
+const postcss = require('gulp-postcss');
+const autoprefixer = require('autoprefixer');
 
+const shortColor = require('postcss-short-color');
 
 
 
@@ -96,11 +99,10 @@ function copy_site_assets(cb) {
 
 function copy_processed_css(cb) {
 	return src('src/css/*')
-		.pipe(copy('src/_static/assets', { prefix: 1 })
+		.pipe(copy('src/_static/assets', { prefix: 1 }))
 		.on('end', function () {
 			console.log('CSS files copied to the styleguide assets folder.')
-		})
-	);
+		});
 }
 
 function weather(cb) {
@@ -131,15 +133,14 @@ function processSass() {
 			outputStyle: 'expanded'
 		})
 			.on('error', sass.logError))
-		.pipe(gulp.dest('src/css')
-			.pipe(size({
-				title: 'Processed',
-				showFiles: true
-			}))
+		.pipe(gulp.dest('src/css'))
+		.pipe(size({
+			title: 'Processed',
+			showFiles: true
+		}))
 		.on('end', function () {
 			console.log('Sass processed to CSS.')
-		})
-	);
+		});
 }
 
 /* Minify processed CSS */
@@ -163,6 +164,23 @@ function minifyCSS(cb) {
 	);
 }
 
+
+function css(cb) {
+	// var plugins = [
+    //     autoprefixer()
+    // ];
+	return gulp
+		.src('src/css/styles.css')
+		.pipe(postcss())
+		.pipe(gulp.dest('src/css/p'));
+}
+
+gulp.task('csss', function(done) {
+	gulp.src('src/css/styles.css')
+		.pipe(postcss([autoprefixer]))
+		.pipe(gulp.dest('src/css/p'))
+		.on('end', done);
+});
 
 
 
@@ -280,8 +298,7 @@ function fractal_build() {
 
 /* Default */
 exports.default = series(
-	copy_processed_css,
-	weather
+	css
 );
 
 /* Sass */

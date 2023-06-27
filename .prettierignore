@@ -1,0 +1,11 @@
+# Ignore artifacts:
+_site
+_styleguide
+
+# Ignore these files
+*.html
+*.hbs
+*.md
+.*
+gulpfile.js
+*.css

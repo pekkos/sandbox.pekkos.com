@@ -5,6 +5,7 @@ button {
 
 .bottom {
   display: grid;
-  transform: scale(3);
+  -webkit-transform: scale(3);
+          transform: scale(3);
   color: white black;
 }

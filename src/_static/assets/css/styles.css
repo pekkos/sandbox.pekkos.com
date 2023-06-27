@@ -2,3 +2,9 @@ button {
   background: rebeccapurple;
   color: white;
 }
+
+.bottom {
+  display: grid;
+  transform: scale(3);
+  color: white black;
+}
