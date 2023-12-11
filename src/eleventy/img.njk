@@ -1,0 +1,19 @@
+---
+layout: "layouts/default.hbs"
+title: Responsive image
+---
+
+<h1>Responsive image</h1>
+
+
+<p>Responsive image?</p>
+
+{% set ri = "v1685976693/cld-sample-3.jpg" %}
+{% set alt = "This is a cat" %}
+{% include "img/test.njk" %}
+
+
+{% set ri = "dogr.jpg" %}
+{% set alt = "That one is a dog" %}
+{% include "img/test.njk" %}
+

@@ -1,3 +1,86 @@
-@import "config/**/*.scss";
+@charset 'UTF-8';
 
-@import "../../fractal/patterns/**/*.scss";
+/**
+ * STYLES
+ *
+ * [about this file]
+ *
+ *
+ * Table of Contents
+ *
+ * BASE
+ * All ..................... The Base layer consists of tools and helpers and
+ *                           since they don't produce any CSS they can be glob
+ *                           imported.
+ *
+ * CONFIG
+ *
+ *
+ * ELEMENTS
+ * Normalize ............... Levels out browser differences based on a
+ *                           browserslist config file
+ * Box-sizing .............. Default 'box-sizing'
+ *
+ *
+ * LAYOUT
+ *
+ * PATTERNS
+ * All ..................... Patterns should be componentized and un-independent
+ *                           from each other. Thus, it should be safe to glob
+ *                           import all patterns.
+ *
+ * UTILITIES
+ * Shame ................... The place to put hacks and quick fixes. Just make
+ *                           sure to refactor and distribute this shameful code
+ *                           to where it really should reside.
+ *
+ * WELLNESS
+ *
+ */
+
+
+/**
+ * BASE
+ */
+
+@import url('base/**/*.scss');
+
+
+/*! No CSS before this comment! */
+
+
+/**
+ * CONFIG
+ */
+
+@import url('config/**/*.scss');
+
+
+/**
+ * ELEMENTS
+ */
+
+@import url('elements/elements.normalize.scss');
+@import url('elements/elements.box-sizing.scss');
+
+
+/**
+ * LAYOUT
+ */
+
+
+/**
+ * PATTERNS
+ */
+
+@import url('../../fractal/patterns/**/*.scss');
+
+
+/**
+ * SHAME
+ */
+
+
+/**
+ * UTILITIES
+ */

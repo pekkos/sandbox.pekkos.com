@@ -7,16 +7,13 @@
 	"scripts": {
 		"preinstall": "npx force-resolutions",
 		"fractal": "gulp fractal",
-		"11ty": "gulp pre_11ty && npx @11ty/eleventy && gulp post_11ty"
+		"sass": "gulp css_sass",
+		"plus": "gulp css_plus",
+		"norm": "gulp css_norm",
+		"11ty": "gulp pre_11ty && npx @11ty/eleventy"
 	},
 	"resolutions": {
 		"glob-parent": "^6.0.2"
-	},
-	"postcss": {
-		"map": false,
-		"plugins": {
-			"postcss-plugin": {}
-		}
 	},
 	"devDependencies": {
 		"autoprefixer": "^10.4.14",
@@ -24,22 +21,24 @@
 		"gulp-clean": "^0.4.0",
 		"gulp-clean-css": "^4.3.0",
 		"gulp-copy": "^4.0.1",
+		"gulp-csscomb": "^3.1.0",
 		"gulp-dart-sass": "^1.1.0",
 		"gulp-postcss": "^9.0.1",
+		"gulp-rename": "^2.0.0",
 		"gulp-sass-glob": "^1.1.0",
 		"gulp-size": "^4.0.1",
-		"postcss-load-config": "^4.0.1",
-		"postcss-plugin": "^1.0.0",
-		"postcss-short-color": "^4.0.0",
-		"prettier": "2.8.8",
+		"postcss": "^8.4.32",
+		"postcss-normalize": "^10.0.1",
+		"postcss-reporter": "^7.0.5",
+		"postcss-scss": "^4.0.9",
+		"prettier": "3.1.0",
 		"stylelint": "^15.8.0",
-		"stylelint-scss": "^5.0.1",
-		"postcss-discard-duplicates": "^6.0.0"
+		"stylelint-config-standard": "^34.0.0",
+		"stylelint-scss": "^5.0.1"
 	},
 	"dependencies": {
 		"@11ty/eleventy": "^2.0.1",
 		"@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
-		"@frctl/fractal": "^1.5.15",
-		"gulp-rename": "^2.0.0"
+		"@frctl/fractal": "^1.5.15"
 	}
 }

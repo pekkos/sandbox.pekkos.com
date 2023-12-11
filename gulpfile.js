@@ -25,12 +25,22 @@ g:::::gg   gg:::::g                          p:::::::p
 https://gulpjs.com/
 */
 
-/* Exported / Public tasks
+/**
+ * Exported / Public tasks
+ *
+ *	'$ gulp css'				[Process Sass and CSS to files]
+ *	'$ gulp fractal_start 		[Start a local fractal web server with browser sync]
+ *	'$ gulp fractal_build 		[Build a static styleguide]
+ *	'$ gulp deploy_legacy'		[Deploys the legacy github.io site, use it on Main/www]
+ *	'$ gulp deploy_styleguide	[Builds and deploys a static styleguide]
+ */
 
-	'$ npm run fractal' 					[Runs through processing and deploys a styleguide]
-	'$ npm run 11ty'						[Fetched assets and depoys a site]
-
-*/
+/**
+ * Outside Gulp
+ *
+ *	'$ npm run 11ty_dev'		[Deploys the site in development environment]
+ *	'$ npm run 11ty_www'		[Deploys the site in production environment]
+ */
 
 
 
@@ -49,21 +59,22 @@ const copy = require('gulp-copy');
 const rename = require("gulp-rename");
 const size = require('gulp-size');
 
-/* Fetch required plugins */
+/* Fetch required modules */
 const sass = require('gulp-dart-sass');
 const sassGlob = require('gulp-sass-glob');
 const postcss = require('gulp-postcss');
 const cleanCSS = require('gulp-clean-css');
-const postcss = require('gulp-postcss');
+const csscomb = require('gulp-csscomb'); /* https://github.com/csscomb/csscomb.js */
 
-const shortColor = require('postcss-short-color');
+/* Fetch PostCSS plugins */
+const postcssNormalize = require('postcss-normalize');
 // Autoprefixer - base on .browserslistrc
 // https://github.com/postcss/autoprefixer
 const autoprefixer = require('autoprefixer');
+const stylelint = require('stylelint');
+const reporter = require('postcss-reporter');
+const scssParser = require('postcss-scss');
 
-// Discard duplicates
-// https://github.com/cssnano/cssnano/tree/master/packages/postcss-discard-duplicates
-const postcssDiscardDuplicates = require('postcss-discard-duplicates');
 
 
 
@@ -74,7 +85,7 @@ const postcssDiscardDuplicates = require('postcss-discard-duplicates');
  * -------------------------------------------------------------------------- */
 
 function defaultTask(cb) {
-	console.log('place code for your default task here');
+	console.log("No default task defined");
 	cb();
 }
 
@@ -113,21 +124,57 @@ function copy_processed_css(cb) {
 		});
 }
 
-function weather(cb) {
-	exec('curl -s http://wttr.in/Gothenburg | head -7', function (err, stdout, stderr) {
-		console.log(stdout);
-		console.log(stderr);
-		cb(err);
-	});
-}
-
-
-
-
 
 /* -----------------------------------------------------------------------------
  * CSS tasks
  * -------------------------------------------------------------------------- */
+
+
+/**
+ * Tidy upp Sass using CombCSS
+ */
+
+function combCSS(cb) {
+	return gulp
+		.src([
+			'src/**/*.scss'
+		])
+		.pipe(csscomb())
+		.pipe(gulp.dest('src/'))
+		.pipe(size({
+			title: 'Combed',
+			showFiles: true
+		}))
+		.on('end', function () {
+			console.log('Sass partials sorted and combed')
+		});
+}
+
+
+/**
+ * Lint Sass using Stylelint
+ */
+
+function postCSSstylelint(cb) {
+	const plugins = [
+       stylelint(),
+        reporter({"clearReportedMessages": true})
+ 	];
+
+	return gulp
+		.src([
+			'src/**/*.scss'
+		])
+		.pipe(postcss(plugins))
+		.pipe(gulp.dest('src/'))
+		// .pipe(size({
+		// 	title: 'Linted',
+		// 	showFiles: true
+		// }))
+		.on('end', function () {
+			console.log('Sass partials linted')
+		});
+}
 
 /* Pre-process Sass files to CSS */
 
@@ -143,7 +190,7 @@ function processSass() {
 			.on('error', sass.logError))
 		.pipe(gulp.dest('src/css'))
 		.pipe(size({
-			title: 'Processed',
+			title: 'Processed Sass to',
 			showFiles: true
 		}))
 		.on('end', function () {
@@ -152,63 +199,13 @@ function processSass() {
 }
 
 
-/* Minify processed CSS */
+/**
+ * Import Normalize based on Browserslist using PostCSS
+ */
 
-function minifyCSS(cb) {
-	return gulp
-		.src([
-			'src/css/*.css',
-			'!src/css/*.min.css'
-			])
-		.pipe(cleanCSS())
-		.pipe(rename({ suffix: ".min" }))
-		.pipe(gulp.dest('src/css')
-		.pipe(size({
-			title: 'Minified',
-			showFiles: true
-		}))
-		.on('end', function () {
-			console.log('CSS files minified.')
-		})
-	);
-}
-
-
-function css(cb) {
-	// var plugins = [
-    //     autoprefixer()
-    // ];
-	return gulp
-		.src('src/css/styles.css')
-		.pipe(postcss())
-		.pipe(gulp.dest('src/css/p'));
-}
-
-gulp.task('csss', function(done) {
-	gulp.src('src/css/styles.css')
-		.pipe(postcss([autoprefixer]))
-		.pipe(gulp.dest('src/css/p'))
-		.on('end', done);
-});
-
-function postCSSplus(cb) {
+function postCSSnormalize(cb) {
 	const plugins = [
-		autoprefixer()
-	];
-
-	return gulp
-		.src([
-			'src/css/*.css',
-			'!src/css/*.min.css'
-			])
-		.pipe(postcss(plugins))
-		.pipe(gulp.dest('src/css'));
-}
-
-
-function postCSSminus(cb) {
-	const plugins = [
-		postcssDiscardDuplicates()
+		postcssNormalize()
 	];
 
 	return gulp
@@ -217,16 +214,110 @@ function postCSSminus(cb) {
 			'!src/css/*.min.css'
 		])
 		.pipe(postcss(plugins))
-		.pipe(gulp.dest('src/csss'))
+		.pipe(gulp.dest('src/css'))
 		.pipe(size({
-			title: 'Minified',
+			title: 'Inject Normalize to',
 			showFiles: true
 		}))
 		.on('end', function () {
-			console.log('CSS files minified.')
+			console.log('Normalized injected using PostCSS and Browserslist.')
 		});
 }
 
+/**
+ * Inject vendor prefixes based on Browserslist uring PostCSS
+ */
+
+
+function postCSSautoprefixer(cb) {
+	const plugins = [
+		autoprefixer()
+	];
+
+	return gulp
+		.src([
+			'src/css/*.css',
+			'!src/css/*.min.css'
+		])
+		.pipe(postcss(plugins))
+		.pipe(gulp.dest('src/css'))
+		.pipe(size({
+			title: 'Inject vendor prefixer to',
+			showFiles: true
+		}))
+		.on('end', function () {
+			console.log('Vendor prefixes auto injected using PostCSS and Browserslist.')
+		});
+}
+
+
+/**
+ * Minify processed CSS
+ */
+
+function minifyCSS(cb) {
+	return gulp
+		.src([
+			'src/css/*.css',
+			'!src/css/*.min.css'
+			])
+		.pipe(cleanCSS({debug: true}, (details) => {
+			console.log(`${details.name} minified from ${details.stats.originalSize} to ${details.stats.minifiedSize}`);
+		}))
+		.pipe(rename({ suffix: ".min" }))
+		.pipe(gulp.dest('src/css')
+	);
+}
+
+/**
+ * Copy post-processed and minified CSS to static assets folder
+ */
+
+function copyCSSassets() {
+	return src(["src/css/*.css", "src/css/*.min.css"])
+		.pipe(copy("src/_static/assets/css", { prefix: 2 }))
+		.pipe(
+			size({
+				title: "Copy processed CSS file:",
+				showFiles: true,
+			})
+		)
+		.on("end", function () {
+			console.log(
+				"Post-processed CSS files copied to the static assets folder"
+			);
+		});
+}
+
+
+
+
+
+// gulp.task('styles', function() {
+//   return gulp.src('src/styles/main.css')
+//     .pipe(csscomb())
+//     .pipe(gulp.dest('./build/css'));
+// });
+
+// const fs = require("fs");
+// const less = require("postcss-less");
+// const postcss = require("postcss");
+
+// // Code to be processed
+// const code = fs.readFileSync("input.less", "utf8");
+
+// postcss([
+//   require("stylelint")({
+//     /* your options */
+//   }),
+//   require("postcss-reporter")({ clearReportedMessages: true })
+// ])
+//   .process(code, {
+//     from: "input.less",
+//     syntax: less
+//   })
+//   .then(() => {})
+//   .catch((err) => console.error(err.stack));
 
 /* -----------------------------------------------------------------------------
  * Fractal configuration and tasks
@@ -326,7 +417,7 @@ function fractal_build() {
 	const builder = fractal.web.builder();
 	builder.on('progress', (completed, total) => logger.update(`Exported ${completed} of ${total} items`, 'info'));
 	builder.on('error', err => logger.error(err.message));
-	return builder.build().then(() => {
+	return builder.start().then(() => {
 		logger.success('Fractal build completed!');
 	});
 }
@@ -340,17 +431,33 @@ function fractal_build() {
  * -------------------------------------------------------------------------- */
 
 /* Default */
-exports.default = series(
-	css,
+exports.default = defaultTask;
+
+
+/**
+ * CSS
+ */
+
+exports.css = series(
+	combCSS,
+	postCSSstylelint,
 	processSass,
-	postCSSminus,
-	weather
+	postCSSnormalize,
+	postCSSautoprefixer,
+	minifyCSS,
+	copyCSSassets
 );
 
-/* Sass */
-exports.sass = series(
-	processSass
-)
+/* Verified */
+exports.css_comb = combCSS;
+exports.css_lint = postCSSstylelint;
+exports.css_sass = processSass;
+exports.css_norm = postCSSnormalize;
+exports.css_prefix = postCSSautoprefixer;
+exports.css_min = minifyCSS;
+exports.css_assets = copyCSSassets;
+/* Unverified */
+
 
 /* Fractal */
 exports.fractal_start = fractal_start;
@@ -359,12 +466,9 @@ exports.fractal_build = fractal_build;
 
 /* Fractal pipeline */
 exports.fractal = series(
+//	css,
 	clean_styleguide,
-	processSass,
-	minifyCSS,
-	copy_processed_css,
-	fractal_build,
-	weather
+	fractal_build
 );
 
 /* Eleventy pre pipeline */
@@ -374,6 +478,7 @@ exports.pre_11ty = series(
 );
 
 /* Eleventy post pipeline */
-exports.post_11ty = series(
-	weather
-);
+// exports.post_11ty = series(
+// );
+
+

@@ -3,11 +3,30 @@
 	  "stylelint-scss"
 	],
 	"fix": true,
+	"extends": "stylelint-config-standard",
 	"rules": {
-	  "color-no-hex": true,
-	  "at-rule-no-unknown": null,
-	  "scss/at-rule-no-unknown": true,
-	  "scss/dollar-variable-pattern": "^foo",
-	  "scss/selector-no-redundant-nesting-selector": true
+	  	"at-rule-no-unknown": null,
+	  	"scss/at-rule-no-unknown": true,
+	  	"scss/selector-no-redundant-nesting-selector": true,
+		"color-no-hex": true,
+		"function-calc-no-unspaced-operator": true,
+		"function-linear-gradient-no-nonstandard-direction": true,
+		"function-name-case": "lower",
+		"function-url-quotes": "always",
+		"number-max-precision": 4,
+		"string-no-newline": true,
+		"length-zero-no-unit": true,
+		"unit-no-unknown": true,
+		"value-keyword-case": "lower",
+		"shorthand-property-no-redundant-values": true,
+		"property-no-vendor-prefix": true,
+		"block-no-empty": true,
+		"selector-no-qualifying-type": true,
+		"selector-no-vendor-prefix": true,
+		"selector-type-case": "lower",
+		"rule-empty-line-before": "always-multi-line",
+		"at-rule-no-vendor-prefix": true,
+		"comment-whitespace-inside": "always",
+		"no-duplicate-selectors": true
 	}
 }

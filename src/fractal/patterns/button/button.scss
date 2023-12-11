@@ -1,25 +1,35 @@
 button {
-	background: $buttoncolor;
-	border: 3px solid hotpink;
+	font-family: Trebuchet, sans-serif;
 	color: $white;
+	border: 3px solid hotpink;
+	background: $buttoncolor;
 }
 
 .bottom {
 	display: grid;
 	transform: scale(3);
-	color: white black;
+	color: white;
+}
+
+.butym {
+	display: grid;
+
+	@include set-color;
 }
 
 .stylelint {
-	color: #ddaaff;
+	color: #daf;
+	background-color: rgb(100 100 200);
 }
 
 /* or use prettier with stylelint? */
 
-
 h1,
 h2 {
+	transform: rotate(120deg);
+	text-transform: uppercase;
 	color: blue;
+	text-size-adjust: 100%;
 }
 
 h2,
